@@ -24,11 +24,11 @@ let config = {
 Object.keys(config).forEach(key => {
   const thisButton = config[key].button;
   thisButton.textContent = config[key].isOpen ? "APERTO" : "CHIUSO";
-  thisButton.style.backgroundColor = config[key].isOpen ? "green" : "red";
+  thisButton.style.backgroundColor = config[key].isOpen ? "rgb(0, 255, 123)" : "rgb(255, 0, 8)";
   thisButton.addEventListener("click", () => {
     config[key].isOpen = !config[key].isOpen;
     thisButton.textContent = config[key].isOpen ? "APERTO" : "CHIUSO";
-    thisButton.style.backgroundColor = config[key].isOpen ? "green" : "red";
+    thisButton.style.backgroundColor = config[key].isOpen ? "rgb(0, 255, 123)" : "rgb(255, 0, 8)";
     ws.send(key + ":" + Number(config[key].isOpen));
   });
 });
