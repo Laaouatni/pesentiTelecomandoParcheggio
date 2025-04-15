@@ -1,15 +1,5 @@
 const ws = new WebSocket('wss://pesentiws-43f6274c0f11.herokuapp.com/');
 
-ws.addEventListener("open", () => {
-  document.getElementById("wsClose").hidden = true;
-  document.getElementById("wsOpen").hidden = false;
-});
-
-ws.addEventListener("close", () => {
-  document.getElementById("wsClose").hidden = false;
-  document.getElementById("wsOpen").hidden = true;
-});
-
 let config = {
   uscita: {
     isOpen: false,
@@ -20,6 +10,21 @@ let config = {
     button: document.getElementById("ingressoButton")
   }
 };
+
+ws.addEventListener("open", () => {
+  document.getElementById("wsClose").hidden = true;
+  document.getElementById("wsOpen").hidden = false;
+  
+  Object.keys(config).forEach(key => {
+    ws.send(key + ":" + Number(config[key].isOpen));
+  });
+});
+
+ws.addEventListener("close", () => {
+  document.getElementById("wsClose").hidden = false;
+  document.getElementById("wsOpen").hidden = true;
+});
+
 
 Object.keys(config).forEach(key => {
   const thisButton = config[key].button;
