@@ -1,5 +1,15 @@
 const ws = new WebSocket('wss://pesentiws-43f6274c0f11.herokuapp.com/');
 
+ws.addEventListener("open", () => {
+  document.getElementById("wsClose").hidden = true;
+  document.getElementById("wsOpen").hidden = false;
+});
+
+ws.addEventListener("close", () => {
+  document.getElementById("wsClose").hidden = false;
+  document.getElementById("wsOpen").hidden = true;
+});
+
 let config = {
   uscita: {
     isOpen: false,
