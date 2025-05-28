@@ -66,12 +66,11 @@ Object.keys(config).forEach((gateName) => {
     if (isStillWarning[gateName]) return;
     config[gateName].isOpen = !config[gateName].isOpen;
 
-    if (config[gateName].isOpen) {
-      setTimeout(() => {
-        if (isStillWarning[gateName]) return;
-        config[gateName].isOpen = false;
-        console.log("chiuso " + gateName);
-      }, 1000);
-    }
+    if (!config[gateName].isOpen) return;
+
+    setTimeout(() => {
+      if (isStillWarning[gateName]) return;
+      config[gateName].isOpen = false;
+    }, 1000);
   });
 });
