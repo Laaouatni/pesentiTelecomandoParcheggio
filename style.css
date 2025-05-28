@@ -1,64 +1,68 @@
 * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      color: white;
-    }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
 
-    html, body {
-      height: 100%;
-      width: 100%;
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      font-family: Helvetica;
-      padding: 0.5rem;
-    }
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: Helvetica;
+  padding: 0.5rem;
+}
 
-    .outButtonContainer {
-      flex: 1;
-      display: flex;
-    }
 
-    #cancelloContainer {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      gap: 1rem;
-      padding: 1rem;
-      border-radius: 1rem;
-      background-color: #ffffff13;
-    }
+#cancelloContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: #ffffff13;
+}
 
-    .buttonContainer {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      gap: 1rem;
-      padding: 1rem;
-      border: 0.2rem solid rgba(255, 255, 255, 0.05);
-    }
+.outButtonContainer {
+  flex: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 0.2rem solid rgba(255, 255, 255, 0.05);
+}
 
-    .buttonContainer button {
-      flex: 1;
-      border: 0.5rem solid white;
-      border-radius: 1rem;
-      transition: all 0.1s ease-in-out;
-      cursor: pointer;
-      font-size: 1.5rem;
-    }
+.buttonContainer {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  align-items: center;
+}
 
-    .buttonContainer button:hover {
-      scale: 1.05;
-      filter: brightness(1.2);
-    }
+.buttonContainer button {
+  flex: 1;
+  border: 0.5rem solid white;
+  border-radius: 1rem;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  font-size: 1.5rem;
+  height: 100%;
+}
 
-    .buttonContainer button:active {
-      scale: 0.95;
-      filter: brightness(0.8);
-    }
+.buttonContainer button:hover {
+  scale: 1.05;
+  filter: brightness(1.2);
+}
 
-    .buttonContainer img {
-      width: 100%
-    }
+.buttonContainer button:active {
+  scale: 0.95;
+  filter: brightness(0.8);
+}
+
+.buttonContainer img {
+  height: 20vw;
+}
