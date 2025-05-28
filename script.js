@@ -21,8 +21,10 @@ ws.addEventListener("close", () => {
   window.location.reload();
 });
 
-ws.addEventListener("message", (e) => {
-  const [key, value] = e.data.split(":");
+ws.addEventListener("message", async(e) => {
+  const blob = e.data;
+  const text = await blob.text();
+  const [key, value] = text.split(":");
   if (key == "cancelloCameraInput") {
     console.log({value});
   }
