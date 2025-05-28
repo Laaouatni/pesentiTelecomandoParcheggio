@@ -2,6 +2,10 @@ const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 
 const APERTO_COLOR = "rgb(0, 255, 123)";
 const CHIUSO_COLOR = "rgb(255, 0, 8)";
+
+const APERTO_URLIMG = "./imgs/barraOpen.jpg";
+const CHIUSO_URLIMG = "./imgs/barraClose.jpg";
+
 const TIMEOUT = 2000;
 
 let isStillWarning = {
@@ -13,19 +17,28 @@ const config = {
   ingresso: createGateProxy("ingresso", {
     isOpen: false,
     button: document.getElementById("ingressoButton"),
+    img: document.getElementById("ingressoImg"),
   }),
   uscita: createGateProxy("uscita", {
     isOpen: false,
     button: document.getElementById("uscitaButton"),
+    img: document.getElementById("uscitaImg"),
   }),
 };
 
+/**
+ *
+ * @param {String} gateName
+ * @param {Object} obj
+ */
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
       const thisButton = target.button;
+      const thisImg = target.img;
       thisButton.textContent = value ? "APERTO" : "CHIUSO";
       thisButton.style.backgroundColor = value ? APERTO_COLOR : CHIUSO_COLOR;
+      thisImg.src = value ? APERTO_URLIMG : CHIUSO_URLIMG
       ws.send(gateName + ":" + Number(value));
       return Reflect.set(target, prop, value, receiver);
     },
