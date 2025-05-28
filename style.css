@@ -30,7 +30,8 @@ body {
 
 .outButtonContainer {
   flex: 1;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1rem;
   border: 0.2rem solid rgba(255, 255, 255, 0.05);
@@ -65,4 +66,9 @@ body {
 
 .buttonContainer img {
   height: 20vw;
+  border-radius: 3vw;
+}
+
+#uscitaImg {
+  transform: scaleX(-1);
 }
