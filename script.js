@@ -2,6 +2,7 @@ const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 
 const APERTO_COLOR = "rgb(0, 255, 123)";
 const CHIUSO_COLOR = "rgb(255, 0, 8)";
+const TIMEOUT = 2000;
 
 let isStillWarning = {
   ingresso: false,
@@ -56,8 +57,20 @@ ws.addEventListener("message", async (e) => {
     uscita: uscitaWarning,
   };
 
-  if (ingressoWarning) config.ingresso.isOpen = true;
-  if (uscitaWarning) config.uscita.isOpen = true;
+  if (ingressoWarning) {
+    config.ingresso.isOpen = true;
+    setTimeout(() => {
+      if (isStillWarning.ingresso) return;
+      config.ingresso.isOpen = false;
+    }, TIMEOUT);
+  }
+  if (uscitaWarning) {
+    config.uscita.isOpen = true;
+    setTimeout(() => {
+      if (isStillWarning.uscita) return;
+      config.uscita.isOpen = false;
+    }, TIMEOUT)
+  }
 });
 
 Object.keys(config).forEach((gateName) => {
@@ -71,6 +84,6 @@ Object.keys(config).forEach((gateName) => {
     setTimeout(() => {
       if (isStillWarning[gateName]) return;
       config[gateName].isOpen = false;
-    }, 1000);
+    }, TIMEOUT);
   });
 });
