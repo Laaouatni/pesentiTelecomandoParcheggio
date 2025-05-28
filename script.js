@@ -3,6 +3,11 @@ const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 const APERTO_COLOR = "rgb(0, 255, 123)";
 const CHIUSO_COLOR = "rgb(255, 0, 8)";
 
+let closeTimeout = {
+  ingresso: null,
+  uscita: null,
+};
+
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
@@ -54,5 +59,10 @@ Object.keys(config).forEach((key) => {
   const thisButton = config[key].button;
   thisButton.addEventListener("click", () => {
     config[key].isOpen = !config[key].isOpen;
+    if (config[key].isOpen) {
+      closeTimeout = setTimeout(() => {
+        config[key].isOpen = false;
+      }, 2000);
+    }
   })
 })
