@@ -1,20 +1,25 @@
 const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 
-const config = new Proxy({
-  ingresso: {
-    isOpen: false,
-    button: document.getElementById("ingressoButton"),
+const config = new Proxy(
+  {
+    ingresso: {
+      isOpen: false,
+      button: document.getElementById("ingressoButton"),
+    },
+    uscita: {
+      isOpen: false,
+      button: document.getElementById("uscitaButton"),
+    },
   },
-  uscita: {
-    isOpen: false,
-    button: document.getElementById("uscitaButton"),
+  {
+    set: (parent, property, thisNewValue, receiver) => {
+      console.log(
+        `ciao`,
+      );
+      return Reflect.set(parent, property, thisNewValue, receiver)
+    },
   },
-}, {
-  set(target, prop, receiver) {
-    console.log(`target: ${target}, prop: ${prop}, receiver: ${receiver}`);
-    return Reflect.set(target, prop, receiver);
-  }
-})
+);
 
 ws.addEventListener("open", () => {
   Object.keys(config).forEach((key) => {
@@ -35,7 +40,9 @@ ws.addEventListener("message", async (e) => {
     const uscitaWarning = value.split(",")[1] == "1";
     if (ingressoWarning) config.ingresso.isOpen = true;
     if (uscitaWarning) config.uscita.isOpen = true;
-    console.log(`Ingresso Warning: ${ingressoWarning}, Uscita Warning: ${uscitaWarning}`);
+    console.log(
+      `Ingresso Warning: ${ingressoWarning}, Uscita Warning: ${uscitaWarning}`,
+    );
   }
 });
 
