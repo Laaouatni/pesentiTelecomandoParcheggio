@@ -3,9 +3,9 @@ const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 const APERTO_COLOR = "rgb(0, 255, 123)";
 const CHIUSO_COLOR = "rgb(255, 0, 8)";
 
-let closeTimeout = {
-  ingresso: null,
-  uscita: null,
+let isStillWarning = {
+  ingresso: false,
+  uscita: false,
 };
 
 function createGateProxy(gateName, obj) {
@@ -51,6 +51,11 @@ ws.addEventListener("message", async (e) => {
   const ingressoWarning = value.split(",")[0] == "1";
   const uscitaWarning = value.split(",")[1] == "1";
 
+  isStillWarning = {
+    ingresso: ingressoWarning,
+    uscita: uscitaWarning,
+  };
+
   if (ingressoWarning) config.ingresso.isOpen = true;
   if (uscitaWarning) config.uscita.isOpen = true;
 });
@@ -60,8 +65,10 @@ Object.keys(config).forEach((key) => {
   thisButton.addEventListener("click", () => {
     config[key].isOpen = !config[key].isOpen;
     if (config[key].isOpen) {
-      closeTimeout = setTimeout(() => {
+      setTimeout(() => {
+        if(isStillWarning[key]) return;
         config[key].isOpen = false;
+        console.log(`Cancello ${key} chiuso automaticamente dopo 2 secondi`);
       }, 2000);
     }
   })
