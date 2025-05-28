@@ -1,13 +1,13 @@
 const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 
 let config = {
-  uscita: {
-    isOpen: false,
-    button: document.getElementById("uscitaButton"),
-  },
   ingresso: {
     isOpen: false,
     button: document.getElementById("ingressoButton"),
+  },
+  uscita: {
+    isOpen: false,
+    button: document.getElementById("uscitaButton"),
   },
 };
 
@@ -21,14 +21,17 @@ ws.addEventListener("close", () => {
   window.location.reload();
 });
 
-ws.addEventListener("message", async(e) => {
+ws.addEventListener("message", async (e) => {
   const blob = e.data;
   const text = await blob.text();
   const [key, value] = text.split(":");
   if (key == "cancelloCameraInput") {
-    console.log({value});
+    const ingressoWarning = value.split(",")[0] == "1";
+    const uscitaWarning = value.split(",")[1] == "1";
+    if (ingressoWarning) config.ingresso.isOpen = true;
+    if (uscitaWarning) config.uscita.isOpen = true;
   }
-})
+});
 
 Object.keys(config).forEach((key) => {
   const thisButton = config[key].button;
