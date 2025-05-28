@@ -8,13 +8,24 @@ let isStillWarning = {
   uscita: false,
 };
 
+const config = {
+  ingresso: createGateProxy("ingresso", {
+    isOpen: false,
+    button: document.getElementById("ingressoButton"),
+  }),
+  uscita: createGateProxy("uscita", {
+    isOpen: false,
+    button: document.getElementById("uscitaButton"),
+  }),
+};
+
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
-      if (target.isOpen) {
+      if (config[gateName].isOpen) {
         setTimeout(() => {
           if (isStillWarning[gateName]) return;
-          target.isOpen = false;
+          config[gateName].isOpen = false;
           console.log("chiuso " + gateName);
         }, 1000);
       }
@@ -27,16 +38,6 @@ function createGateProxy(gateName, obj) {
   });
 }
 
-const config = {
-  ingresso: createGateProxy("ingresso", {
-    isOpen: false,
-    button: document.getElementById("ingressoButton"),
-  }),
-  uscita: createGateProxy("uscita", {
-    isOpen: false,
-    button: document.getElementById("uscitaButton"),
-  }),
-};
 
 ws.addEventListener("open", () => {
   config.ingresso.isOpen = false;
