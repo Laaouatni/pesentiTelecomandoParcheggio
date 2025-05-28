@@ -32,6 +32,13 @@ function createGateProxy(gateName, obj) {
   });
 }
 
+function autoCloseGate(gateName) {
+  setTimeout(() => {
+    if (isStillWarning[gateName]) return;
+    config[gateName].isOpen = false;
+  }, TIMEOUT);
+}
+
 ws.addEventListener("open", () => {
   config.ingresso.isOpen = false;
   config.uscita.isOpen = false;
@@ -57,20 +64,11 @@ ws.addEventListener("message", async (e) => {
     uscita: uscitaWarning,
   };
 
-  if (ingressoWarning) {
-    config.ingresso.isOpen = true;
-    setTimeout(() => {
-      if (isStillWarning.ingresso) return;
-      config.ingresso.isOpen = false;
-    }, TIMEOUT);
-  }
-  if (uscitaWarning) {
-    config.uscita.isOpen = true;
-    setTimeout(() => {
-      if (isStillWarning.uscita) return;
-      config.uscita.isOpen = false;
-    }, TIMEOUT)
-  }
+  Object.entries(isStillWarning).forEach(([gateName, isWarning]) => {
+    if (!isWarning) return;
+    config[gateName].isOpen = true;
+    autoCloseGate(gateName);
+  });
 });
 
 Object.keys(config).forEach((gateName) => {
@@ -78,12 +76,7 @@ Object.keys(config).forEach((gateName) => {
   thisButton.addEventListener("click", () => {
     if (isStillWarning[gateName]) return;
     config[gateName].isOpen = !config[gateName].isOpen;
-
     if (!config[gateName].isOpen) return;
-
-    setTimeout(() => {
-      if (isStillWarning[gateName]) return;
-      config[gateName].isOpen = false;
-    }, TIMEOUT);
+    autoCloseGate(gateName);
   });
 });
