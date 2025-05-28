@@ -11,6 +11,13 @@ let isStillWarning = {
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
+      if (target.isOpen) {
+        setTimeout(() => {
+          if (isStillWarning[gateName]) return;
+          target.isOpen = false;
+          console.log("chiuso " + gateName);
+        }, 1000);
+      }
       const thisButton = target.button;
       thisButton.textContent = value ? "APERTO" : "CHIUSO";
       thisButton.style.backgroundColor = value ? APERTO_COLOR : CHIUSO_COLOR;
@@ -64,12 +71,5 @@ Object.keys(config).forEach((key) => {
   const thisButton = config[key].button;
   thisButton.addEventListener("click", () => {
     config[key].isOpen = !config[key].isOpen;
-    if (config[key].isOpen) {
-      setTimeout(() => {
-        if(isStillWarning[key]) return;
-        config[key].isOpen = false;
-        console.log(`Cancello ${key} chiuso automaticamente dopo 2 secondi`);
-      }, 2000);
-    }
-  })
-})
+  });
+});
