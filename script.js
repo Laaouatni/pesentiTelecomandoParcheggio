@@ -22,13 +22,6 @@ const config = {
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
-      if (config[gateName].isOpen) {
-        setTimeout(() => {
-          if (isStillWarning[gateName]) return;
-          config[gateName].isOpen = false;
-          console.log("chiuso " + gateName);
-        }, 1000);
-      }
       const thisButton = target.button;
       thisButton.textContent = value ? "APERTO" : "CHIUSO";
       thisButton.style.backgroundColor = value ? APERTO_COLOR : CHIUSO_COLOR;
@@ -37,7 +30,6 @@ function createGateProxy(gateName, obj) {
     },
   });
 }
-
 
 ws.addEventListener("open", () => {
   config.ingresso.isOpen = false;
@@ -68,9 +60,18 @@ ws.addEventListener("message", async (e) => {
   if (uscitaWarning) config.uscita.isOpen = true;
 });
 
-Object.keys(config).forEach((key) => {
-  const thisButton = config[key].button;
+Object.keys(config).forEach((gateName) => {
+  const thisButton = config[gateName].button;
   thisButton.addEventListener("click", () => {
-    config[key].isOpen = !config[key].isOpen;
+    if (isStillWarning[gateName]) return;
+    config[gateName].isOpen = !config[gateName].isOpen;
+
+    if (config[gateName].isOpen) {
+      setTimeout(() => {
+        if (isStillWarning[gateName]) return;
+        config[gateName].isOpen = false;
+        console.log("chiuso " + gateName);
+      }, 1000);
+    }
   });
 });
