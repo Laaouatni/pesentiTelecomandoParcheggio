@@ -1,9 +1,15 @@
 const ws = new WebSocket("wss://pesentiws-43f6274c0f11.herokuapp.com/");
 
+const APERTO_COLOR = "rgb(0, 255, 123)";
+const CHIUSO_COLOR = "rgb(255, 0, 8)";
+
 function createGateProxy(gateName, obj) {
   return new Proxy(obj, {
     set(target, prop, value, receiver) {
-      console.log(`Proxy [${gateName}] set:`, prop, "=", value);
+      const thisButton = target.button;
+      thisButton.textContent = value ? "APERTO" : "CHIUSO";
+      thisButton.style.backgroundColor = value ? APERTO_COLOR : CHIUSO_COLOR;
+      ws.send(gateName + ":" + Number(value));
       return Reflect.set(target, prop, value, receiver);
     },
   });
@@ -44,18 +50,9 @@ ws.addEventListener("message", async (e) => {
   if (uscitaWarning) config.uscita.isOpen = true;
 });
 
-// Object.keys(config).forEach((key) => {
-//   const thisButton = config[key].button;
-//   thisButton.textContent = config[key].isOpen ? "APERTO" : "CHIUSO";
-//   thisButton.style.backgroundColor = config[key].isOpen
-//     ? "rgb(0, 255, 123)"
-//     : "rgb(255, 0, 8)";
-//   thisButton.addEventListener("click", () => {
-//     config[key].isOpen = !config[key].isOpen;
-//     thisButton.textContent = config[key].isOpen ? "APERTO" : "CHIUSO";
-//     thisButton.style.backgroundColor = config[key].isOpen
-//       ? "rgb(0, 255, 123)"
-//       : "rgb(255, 0, 8)";
-//     ws.send(key + ":" + Number(config[key].isOpen));
-//   });
-// });
+Object.keys(config).forEach((key) => {
+  const thisButton = config[key].button;
+  thisButton.addEventListener("click", () => {
+    config[key].isOpen = !config[key].isOpen;
+  })
+})
